@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHSAN PREMIUM TOOLKIT</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AHSAN TOOLKIT">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <!-- Inline Manifest -->
+    <script>
+        const manifest = {
+            name: "AHSAN PREMIUM TOOLKIT",
+            short_name: "AHSAN TOOLKIT",
+            start_url: "/",
+            display: "standalone",
+            background_color: "#0a0a0a",
+            theme_color: "#0a0a0a",
+            icons: [
+                { src: "https://i.ibb.co/vx6YR9QW/logo.png", sizes: "192x192", type: "image/png" },
+                { src: "https://i.ibb.co/vx6YR9QW/logo.png", sizes: "512x512", type: "image/png" }
+            ]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.querySelector('link[rel="manifest"]') || (() => {
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = manifestURL;
+            document.head.appendChild(link);
+        })();
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            animation: float 6s infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-100px) rotate(180deg); }
+        }
+
+        /* LOGIN SCREEN - Compact */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .login-card {
+            background: linear-gradient(135deg, rgba(25, 25, 25, 0.98), rgba(18, 18, 18, 0.98));
+            border-radius: 24px;
+            padding: 35px 30px;
+            text-align: center;
+            border: 1px solid rgba(79, 172, 254, 0.25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            max-width: 420px;
+            width: 100%;
+            animation: cardGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            from { box-shadow: 0 0 20px rgba(79, 172, 254, 0.15); }
+            to { box-shadow: 0 0 50px rgba(79, 172, 254, 0.3), 0 0 100px rgba(0, 242, 254, 0.15); }
+        }
+
+        .logo-container {
+            margin-bottom: 18px;
+            animation: bounce 2.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .logo-img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4facfe;
+            box-shadow: 0 0 30px rgba(79, 172, 254, 0.4);
+        }
+
+        .login-card h1 {
+            font-size: 1.6em;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 22px;
+            font-size: 0.85em;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(79, 172, 254, 0.25);
+            border-radius: 14px;
+            color: white;
+            font-size: 1.15em;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .key-input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 25px rgba(79, 172, 254, 0.25);
+        }
+
+        .key-input::placeholder {
+            color: #444;
+            letter-spacing: 1px;
+            font-size: 0.75em;
+            text-transform: none;
+        }
+
+        .key-hint {
+            font-size: 0.7em;
+            color: #555;
+            margin-top: 6px;
+        }
+
+        .unlock-btn {
+            margin-top: 16px;
+            padding: 14px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.35);
+        }
+
+        .unlock-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-msg {
+            color: #ff4757;
+            margin-top: 10px;
+            font-size: 0.82em;
+            display: none;
+            padding: 10px;
+            background: rgba(255, 71, 87, 0.08);
+            border-radius: 10px;
+        }
+
+        .get-key-section {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .get-key-text {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.8em;
+        }
+
+        .get-key-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .get-key-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .telegram-btn {
+            background: linear-gradient(45deg, #0088cc, #00a8ff);
+        }
+
+        /* TOOLKIT SCREEN */
+        .toolkit-screen {
+            display: none;
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .update-bar {
+            display: none;
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .update-btn {
+            padding: 6px 20px;
+            background: white;
+            color: #ff6348;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 12px;
+            font-size: 0.85em;
+        }
+
+        .toolkit-header {
+            text-align: center;
+            padding: 30px 20px 22px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(25, 25, 25, 0.9), rgba(18, 18, 18, 0.9));
+            border-radius: 22px;
+            border: 1px solid rgba(79, 172, 254, 0.15);
+        }
+
+        .header-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4facfe;
+            box-shadow: 0 0 25px rgba(79, 172, 254, 0.35);
+            margin-bottom: 12px;
+        }
+
+        .toolkit-header h1 {
+            font-size: 2.2em;
+            font-weight: 800;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header-stats {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(79, 172, 254, 0.08);
+            padding: 7px 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            color: #4facfe;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 14px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            background: #2ed573;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0.6); }
+            50% { box-shadow: 0 0 0 12px rgba(46, 213, 115, 0); }
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: rgba(255, 71, 87, 0.15);
+            border: 1px solid rgba(255, 71, 87, 0.25);
+            border-radius: 10px;
+            color: #ff4757;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 71, 87, 0.25);
+        }
+
+        .search-bar {
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95em;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #4facfe;
+        }
+
+        .search-input::placeholder {
+            color: #444;
+        }
+
+        .categories {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .categories::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .categories::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .category-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.8em;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* TOOLS GRID - Square Cards */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 22px 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(79, 172, 254, 0.35);
+            box-shadow: 0 12px 30px rgba(79, 172, 254, 0.12);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .premium-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65em;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .tool-icon-box {
+            width: 55px;
+            height: 55px;
+            background: rgba(79, 172, 254, 0.08);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            border: 1px solid rgba(79, 172, 254, 0.15);
+        }
+
+        .tool-icon-box img {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .tool-name {
+            font-weight: 700;
+            font-size: 0.95em;
+            color: #fff;
+        }
+
+        .tool-desc {
+            font-size: 0.75em;
+            color: #777;
+            margin-top: -6px;
+        }
+
+        .open-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: auto;
+        }
+
+        .open-btn:hover {
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.35);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 22px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideRight 0.4s ease;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 0.9em;
+        }
+
+        @keyframes slideRight {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .toast-success { background: #2ed573; }
+        .toast-error { background: #ff4757; }
+        .toast-info { background: #4facfe; }
+
+        .install-prompt {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            border: 1px solid #4facfe;
+            padding: 15px 25px;
+            border-radius: 20px;
+            z-index: 9998;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .install-btn {
+            padding: 10px 30px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 8px 5px 0;
+            font-size: 0.9em;
+        }
+
+        .install-close {
+            background: transparent;
+            border: 1px solid #555;
+            color: #aaa;
+        }
+
+        @media (max-width: 500px) {
+            .login-card {
+                padding: 28px 20px;
+            }
+            .login-card h1 {
+                font-size: 1.4em;
+            }
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+                gap: 10px;
+            }
+            .tool-card {
+                padding: 16px 12px;
+            }
+            .toolkit-header h1 {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="logo-container">
+                <img src="https://i.ibb.co/vx6YR9QW/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            </div>
+            <h1>AHSAN PREMIUM TOOLKIT</h1>
+            <p class="subtitle">Unlock All Premium Tools & Features</p>
+            <input type="text" class="key-input" id="keyInput" placeholder="16-Character Key" maxlength="16" autocomplete="off">
+            <div class="key-hint">Enter 16 characters (no dashes)</div>
+            <div class="error-msg" id="errorMsg"></div>
+            <button class="unlock-btn" id="unlockBtn" onclick="unlockToolkit()">🚀 Unlock Toolkit</button>
+            <div class="get-key-section">
+                <p class="get-key-text">🔑 Don't have a key?</p>
+                <div id="contactButtons"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLKIT SCREEN -->
+    <div class="toolkit-screen" id="toolkitScreen">
+        <div class="container">
+            <div class="update-bar" id="updateBar">
+                ⚡ New update available! <button class="update-btn" onclick="location.reload()">Update</button>
+            </div>
+
+            <div class="toolkit-header">
+                <img src="https://i.ibb.co/vx6YR9QW/logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+                <h1>AHSAN PREMIUM TOOLKIT</h1>
+                <div class="header-stats">🔒 <span id="toolCount">0</span> Powerful Tools | 100% Working</div>
+            </div>
+
+            <div class="top-bar">
+                <div class="user-info">
+                    <div class="status-dot"></div>
+                    <span style="color:#2ed573;font-weight:600;">Active</span>
+                    <span id="keyDisplay" style="color:#4facfe;font-family:monospace;"></span>
+                    <span id="expiryDisplay" style="color:#ffa502;"></span>
+                </div>
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search tools..." onkeyup="filterTools()">
+            </div>
+
+            <div class="categories" id="categories"></div>
+
+            <div class="tools-grid" id="toolsGrid"></div>
+        </div>
+    </div>
+
+    <div class="install-prompt" id="installPrompt">
+        <strong>📱 Install App?</strong><br>
+        <small style="color:#888;">Add to home screen for quick access</small><br>
+        <button class="install-btn" id="installBtn">Install</button>
+        <button class="install-btn install-close" onclick="document.getElementById('installPrompt').style.display='none'">Later</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Inline Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', () => self.skipWaiting());
+                self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+            `;
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const swURL = URL.createObjectURL(swBlob);
+            navigator.serviceWorker.register(swURL).catch(() => {});
+        }
+
+        // PWA Install
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(() => {
+                document.getElementById('installPrompt').style.display = 'block';
+            }, 3000);
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            }
+            document.getElementById('installPrompt').style.display = 'none';
+        });
+    </script>
+
+    <!-- Firebase + Main App -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            databaseURL: "https://password-admin-72cb3-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        let allTools = [];
+        let deviceId = '';
+        const CURRENT_VERSION = "1.0.0";
+
+        function generateDeviceId() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = "top";
+            ctx.font = "14px 'Arial'";
+            ctx.fillText("AHSAN " + Date.now(), 2, 2);
+            return btoa(canvas.toDataURL() + navigator.userAgent + screen.width).substring(0, 50);
+        }
+
+        deviceId = generateDeviceId();
+
+        // Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `
+                    left:${Math.random()*100}%;
+                    top:${Math.random()*100}%;
+                    width:${Math.random()*4+2}px;
+                    height:${p.style.width};
+                    animation-delay:${Math.random()*6}s;
+                    animation-duration:${Math.random()*6+3}s;
+                `;
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // Update Check
+        async function checkForUpdates() {
+            try {
+                const snap = await get(ref(database, 'settings/version'));
+                const data = snap.val();
+                if (data && data.version && data.version !== CURRENT_VERSION) {
+                    document.getElementById('updateBar').style.display = 'block';
+                    setTimeout(() => {
+                        if (document.getElementById('updateBar').style.display === 'block') location.reload();
+                    }, 8000);
+                }
+            } catch (e) {}
+        }
+
+        // Contact Settings
+        async function loadContacts() {
+            try {
+                const snap = await get(ref(database, 'settings/contact'));
+                const s = snap.val();
+                const c = document.getElementById('contactButtons');
+                c.innerHTML = '';
+                if (s) {
+                    if (s.contactNumber) {
+                        c.innerHTML += `<a href="https://wa.me/${s.contactNumber.replace(/[^0-9]/g,'')}?text=Hi%20need%20toolkit%20key" target="_blank" class="get-key-btn">📱 WhatsApp: ${s.contactNumber}</a>`;
+                    }
+                    if (s.telegramLink) {
+                        const link = s.telegramLink.startsWith('http') ? s.telegramLink : `https://t.me/${s.telegramLink.replace('@','')}`;
+                        c.innerHTML += `<a href="${link}" target="_blank" class="get-key-btn telegram-btn">✈️ Telegram</a>`;
+                    }
+                }
+            } catch (e) {}
+        }
+        loadContacts();
+
+        // Key Input
+        document.getElementById('keyInput').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            document.getElementById('errorMsg').style.display = 'none';
+        });
+
+        // Session Check
+        const savedKey = localStorage.getItem('atk_key');
+        const savedDevice = localStorage.getItem('atk_device');
+        if (savedKey && savedDevice === deviceId) {
+            document.getElementById('keyInput').value = savedKey;
+            setTimeout(unlockToolkit, 500);
+        }
+
+        // Unlock
+        window.unlockToolkit = async function() {
+            const keyInput = document.getElementById('keyInput').value.trim().toUpperCase();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (!keyInput || keyInput.length !== 16) {
+                errorMsg.textContent = '❌ Key must be exactly 16 characters';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const btn = document.getElementById('unlockBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Verifying...';
+            errorMsg.style.display = 'none';
+
+            try {
+                const snap = await get(ref(database, 'keys'));
+                const keys = snap.val();
+                let vk = null, kid = null;
+
+                if (keys) {
+                    for (const [id, kd] of Object.entries(keys)) {
+                        if (kd.key.toUpperCase() === keyInput && kd.status === 'active') {
+                            if (new Date(kd.expiryDate) > new Date()) { vk = kd; kid = id; break; }
+                        }
+                    }
+                }
+
+                if (vk) {
+                    const devs = vk.devices || {};
+                    const dc = Object.keys(devs).length;
+                    if (dc >= vk.maxDevices && !devs[deviceId]) {
+                        errorMsg.textContent = `❌ Key used on ${vk.maxDevices} device(s)`;
+                        errorMsg.style.display = 'block';
+                        btn.disabled = false;
+                        btn.textContent = '🚀 Unlock Toolkit';
+                        return;
+                    }
+
+                    await update(ref(database), {
+                        [`keys/${kid}/usedDevices`]: dc + 1,
+                        [`keys/${kid}/devices/${deviceId}`]: { lastAccess: new Date().toISOString() }
+                    });
+
+                    localStorage.setItem('atk_key', keyInput);
+                    localStorage.setItem('atk_device', deviceId);
+                    localStorage.setItem('atk_keyId', kid);
+                    localStorage.setItem('atk_expiry', vk.expiryDate);
+
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('toolkitScreen').style.display = 'block';
+                    document.getElementById('keyDisplay').textContent = '🔑: ' + keyInput.substring(0,8) + '...';
+                    document.getElementById('expiryDisplay').textContent = '📅: ' + new Date(vk.expiryDate).toLocaleDateString();
+                    
+                    checkForUpdates();
+                    setupRealTimeTools();
+                    showToast('✅ Welcome! 🎉', 'success');
+                } else {
+                    errorMsg.textContent = '❌ Invalid or expired key';
+                    errorMsg.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = '🚀 Unlock Toolkit';
+                }
+            } catch (e) {
+                errorMsg.textContent = '❌ Error. Try again.';
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = '🚀 Unlock Toolkit';
+            }
+        }
+
+        // Real-time Tools
+        function setupRealTimeTools() {
+            onValue(ref(database, 'tools'), (snap) => {
+                const data = snap.val();
+                allTools = [];
+                if (data) Object.values(data).forEach(t => allTools.push(t));
+                document.getElementById('toolCount').textContent = allTools.length;
+                displayTools(allTools);
+                loadCategories();
+            });
+        }
+
+        function loadCategories() {
+            const set = new Set();
+            allTools.forEach(t => set.add(t.category));
+            const div = document.getElementById('categories');
+            div.innerHTML = '<button class="category-btn active" onclick="filterByCategory(\'all\')">🌟 All</button>';
+            const icons = {'APK Files':'📱','Premium Apps':'⭐','AI':'🤖','Gaming':'🎮','Image Tools':'🖼️','Video Tools':'🎥','Hacking':'💻','Tools':'🔧','Design':'🎨','Educational':'📚','SEO Tools':'📈','Method':'📝','Purpose':'🎯','Other':'📦'};
+            set.forEach(c => div.innerHTML += `<button class="category-btn" onclick="filterByCategory('${c}')">${icons[c]||'📌'} ${c}</button>`);
+        }
+
+        function displayTools(tools) {
+            const grid = document.getElementById('toolsGrid');
+            if (!tools.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#555;"><div style="font-size:3em;">📦</div><p>No tools yet</p></div>';
+                return;
+            }
+            grid.innerHTML = tools.map(t => {
+                const icon = t.icon?.startsWith('data:') ? `<img src="${t.icon}">` : (t.icon || '🛠️');
+                const isPremium = ['Premium Apps','APK Files'].includes(t.category);
+                const descs = {'APK Files':'All Features Free','Premium Apps':'Premium Unlock','AI':'AI Powered','Gaming':'Full Version','Image Tools':'Pro Features','Video Tools':'No Watermark','Design':'Premium Assets','Educational':'Full Access','Tools':'100% Working','Method':'Working Method','Purpose':'Special Purpose','SEO Tools':'Premium SEO'};
+                return `
+                    <div class="tool-card">
+                        ${isPremium ? '<div class="premium-tag">⭐ PREMIUM</div>' : ''}
+                        <div class="tool-icon-box">${icon}</div>
+                        <div class="tool-name">${t.name}</div>
+                        <div class="tool-desc">${descs[t.category] || '100% Working'}</div>
+                        <button class="open-btn" onclick="event.stopPropagation();openTool('${t.url}','${t.name}')">Open</button>
+                    </div>`;
+            }).join('');
+        }
+
+        window.openTool = function(url, name) {
+            if (url && url.startsWith('http')) {
+                showToast(`🚀 Opening ${name}...`, 'info');
+                setTimeout(() => window.open(url, '_blank'), 300);
+            } else {
+                showToast(`⚠️ No link for ${name}`, 'error');
+            }
+        }
+
+        window.filterByCategory = function(cat) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            displayTools(cat === 'all' ? allTools : allTools.filter(t => t.category === cat));
+        }
+
+        window.filterTools = function() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            displayTools(allTools.filter(t => t.name.toLowerCase().includes(term) || t.category.toLowerCase().includes(term)));
+        }
+
+        window.logout = function() {
+            ['atk_key','atk_device','atk_keyId','atk_expiry'].forEach(k => localStorage.removeItem(k));
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('toolkitScreen').style.display = 'none';
+            document.getElementById('keyInput').value = '';
+            showToast('👋 Logged out!', 'info');
+        }
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast toast-${type}`;
+            t.style.display = 'block';
+            clearTimeout(t.hide);
+            t.hide = setTimeout(() => t.style.display = 'none', 2500);
+        }
+
+        document.getElementById('keyInput').addEventListener('keypress', e => { if (e.key === 'Enter') unlockToolkit(); });
+    </script>
+</body>
+</html>
